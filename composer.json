@@ -4,11 +4,12 @@
     "keywords": [ "bitrix", "bitrix24", "api", "api-wrapper", "throttling", "logging", "webhook" ],
     "homepage": "https://github.com/vladi-ri/bitrix24-api/",
     "minimum-stability": "stable",
-    "license": "OpenSource",
+    "license": "MIT",
     "authors": [
         {
             "name": "vladi-ri",
             "homepage": "https://github.com/vladi-ri/",
+            "email": "riemer-vladi@web.de",
             "role": "Developer"
         }
     ],

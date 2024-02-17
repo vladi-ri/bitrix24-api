@@ -1,0 +1,127 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "3b908e4ea4131f16a4af0a5a43e03569",
+    "packages": [
+        {
+            "name": "andrey-tech/debug-logger-php",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/andrey-tech/debug-logger-php.git",
+                "reference": "b78478d1d98a35df60fd80a859af0133649bb646"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/andrey-tech/debug-logger-php/zipball/b78478d1d98a35df60fd80a859af0133649bb646",
+                "reference": "b78478d1d98a35df60fd80a859af0133649bb646",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "App\\DebugLogger\\": "src/App/DebugLogger"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "andrey-tech",
+                    "homepage": "https://github.com/andrey-tech/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Простой логгер на PHP7+, сохраняющий отладочную информацию в файл вместе с данными об объеме используемой оперативной памяти и прошедшем времени",
+            "homepage": "https://github.com/andrey-tech/debug-logger-php",
+            "keywords": [
+                "debug",
+                "debugging-tool",
+                "logger",
+                "memory"
+            ],
+            "support": {
+                "issues": "https://github.com/andrey-tech/debug-logger-php/issues",
+                "source": "https://github.com/andrey-tech/debug-logger-php/tree/2.0.2"
+            },
+            "time": "2022-06-05T04:39:42+00:00"
+        },
+        {
+            "name": "andrey-tech/http-client-php",
+            "version": "3.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/andrey-tech/http-client-php.git",
+                "reference": "a0d0ee0feb0f0c550ea686bf1d0dca9d44e19ea4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/andrey-tech/http-client-php/zipball/a0d0ee0feb0f0c550ea686bf1d0dca9d44e19ea4",
+                "reference": "a0d0ee0feb0f0c550ea686bf1d0dca9d44e19ea4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "App\\HTTP\\": "src/App/HTTP"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "andrey-tech",
+                    "homepage": "https://github.com/andrey-tech/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Простой НТТР(S) клиент на PHP7+ с троттлингом запросов и поддержкой маркера BOM в теле сообщения формата JSON",
+            "homepage": "https://github.com/andrey-tech/http-client-php",
+            "keywords": [
+                "bom",
+                "client",
+                "debug",
+                "http",
+                "http-client",
+                "http-request",
+                "https",
+                "https-client",
+                "https-sertificate",
+                "throttling"
+            ],
+            "support": {
+                "issues": "https://github.com/andrey-tech/http-client-php/issues",
+                "source": "https://github.com/andrey-tech/http-client-php/tree/3.0.7"
+            },
+            "time": "2024-01-15T17:33:44+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.0",
+        "ext-json": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}
