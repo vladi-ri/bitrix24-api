@@ -1,66 +1,74 @@
 <?php
 
-/**
- * Трейт ProductSection. Методы для работы с разделом товаров в системе Bitrix24.
- *
- * @author    andrey-tech
- * @copyright 2019-2021 andrey-tech
- * @see       https://github.com/andrey-tech/bitrix24-api-php
- * @license   MIT
- *
- * @version 1.2.1
- *
- * v1.0.0 (14.10.2019) Начальная версия
- * v1.1.0 (15.11.2019) Добавлен метод getProductSectionFields()
- * v1.2.0 (09.06.2020) Добавлен метод fetchProductSectionList()
- * v1.2.1 (03.02.2021) Исправлено имя класса исключения в методах
- */
-
 declare(strict_types=1);
 
-namespace App\Bitrix24;
+namespace app\Bitrix24;
 
 use Generator;
 
+/**
+ * Trait ProductSection.
+ * Methods for working with ProductSection in Bitrix24.
+ * 
+ * @author    vladi-ri
+ * @copyright 2024 vladi-ri
+ * @see       https://github.com/vladi-ri/bitrix24-api
+ * @license   OpenSource
+ *
+ * @version 1.0.0
+ * 
+ * v1.0.0 (17.02.2024) Introduce Bitrix24API PHP project
+ */
 trait ProductSection
 {
     /**
-     * Возвращает описание полей раздела товаров, в том числе пользовательских
-     *
+     * Return description of product section fields, including custom fields.
+     * 
+     * Action: 'crm.productsection.fields'
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_fields.php
+     * 
+     * @access public
      * @return array
      */
-    public function getProductSectionFields()
-    {
+    public function getProductSectionFields() : array {
         return $this->request('crm.productsection.fields');
     }
 
     /**
-     * Возвращает раздел товаров по ID
-     *
-     * @param  int|string $productSectionId ID раздела товаров
+     * Return product section by ID.
+     * 
+     * Action: 'crm.productsection.get'
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_get.php
+     * 
+     * @param  int|string $productSectionID ID раздела товаров
+     * 
+     * @access public
      * @return array
      */
-    public function getProductSection($productSectionId)
-    {
+    public function getProductSection(int|string $productSectionID) : array {
         $productSection = $this->request(
-            'crm.productsection.get',
-            [ 'id' => $productSectionId ]
+            'crm.productsection.get', [
+                'id' => $productSectionID
+            ]
         );
 
         return $productSection;
     }
 
     /**
-     * Добавляет раздел товаров
-     *
-     * @param  array $fields Список полей раздела товаров
+     * Add product section.
+     * 
+     * Action: 'crm.productsection.add'
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_add.php
+     * 
+     * @param  array $fields List of product section fields
+     * 
+     * @access public
      * @return int
      */
-    public function addProductSection(array $fields = [])
-    {
+    public function addProductSection(array $fields = []) : int {
         $result = $this->request(
-            'crm.productsection.add',
-            [
+            'crm.productsection.add', [
                 'fields' => $fields
             ]
         );
@@ -69,21 +77,21 @@ trait ProductSection
     }
 
     /**
-     * Обновляет раздел товаров
-     *
-     * @param  int|string $productSectionId ID раздела товаров
-     * @param  array      $fields           Список
-     *                                      полей
-     *                                      раздела
-     *                                      товаров
+     * Update product section.
+     * 
+     * Action: 'crm.productsection.update'
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_update.php
+     * 
+     * @param  int|string $productSectionID Product section ID
+     * @param  array      $fields           List of product section fields
+     * 
+     * @access public
      * @return int
      */
-    public function updateProductSection($productSectionId, array $fields = [])
-    {
+    public function updateProductSection($productSectionID, array $fields = []) : int {
         $result = $this->request(
-            'crm.productsection.update',
-            [
-                'id'     => $productSectionId,
+            'crm.productsection.update', [
+                'id'     => $productSectionID,
                 'fields' => $fields
             ]
         );
@@ -92,32 +100,44 @@ trait ProductSection
     }
 
     /**
-     * Удаляет раздел товаров по ID
-     *
-     * @param  int|string $productSectionId ID раздела товаров
+     * Delete product section by ID.
+     * 
+     * Action: 'crm.product.delete'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_delete.php
+     * 
+     * @param  int|string $productSectionID Product section ID
+     * 
+     * @access public
      * @return int
      */
-    public function deleteProductSection($productSectionId)
-    {
+    public function deleteProductSection($productSectionID) : int {
         $result = $this->request(
-            'crm.product.delete',
-            [ 'id' => $productSectionId ]
+            'crm.product.delete', [
+                'id' => $productSectionID
+            ]
         );
 
         return $result;
     }
 
     /**
-     * Возвращает все разделы товары
-     *
-     * @param  array $order  Параметры
-     *                       сортировки
-     * @param  array $filter Параметры фильтрации
-     * @param  array $select Параметры выборки
+     * Return all product sections.
+     * 
+     * Action: 'crm.productsection.list'
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_list.php
+     * 
+     * @param  array $filter Filtering parameters
+     * @param  array $select Selection parameters
+     * @param  array $order  Sorting parameters
+     * 
+     * @access public
      * @return Generator
      */
-    public function getProductSectionList(array $filter = [], array $select = [], array $order = []): Generator
-    {
+    public function getProductSectionList(
+        array $filter = [],
+        array $select = [],
+        array $order = []
+    ) : Generator {
         $params = [
             'order'  => $order,
             'filter' => $filter,
@@ -128,17 +148,24 @@ trait ProductSection
     }
 
     /**
-     * Возвращает все разделы товары используя быстрый метод
-     *
+     * Return all product sections using the quick method.
+     * 
+     * Action: 'crm.productsection.list'
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_list.php
      * @see    https://dev.1c-bitrix.ru/rest_help/rest_sum/start.php
-     * @param  array $order  Параметры
-     *                       сортировки
-     * @param  array $filter Параметры фильтрации
-     * @param  array $select Параметры выборки
+     * 
+     * @param  array $filter Filtering parameters
+     * @param  array $select Selection parameters
+     * @param  array $order  Sorting parameters
+     * 
+     * @access public
      * @return Generator
      */
-    public function fetchProductSectionList(array $filter = [], array $select = [], array $order = []): Generator
-    {
+    public function fetchProductSectionList(
+        array $filter = [],
+        array $select = [],
+        array $order = []
+    ) : Generator {
         $params = [
             'order'  => $order,
             'filter' => $filter,
@@ -148,34 +175,38 @@ trait ProductSection
         return $this->fetchList('crm.productsection.list', $params);
     }
 
-    // ------------------------------------------------------------------------
-
     /**
-     * Пакетно добавляет разделы товары
-     *
-     * @param  array $productSections Массив разделов товаров
-     * @return array Массив Id разделов товаров
+     * Adds product sections.
+     * Return array of IDs of product sections
+     * 
+     * Action: crm.productsection.add
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_add.php
+     * 
+     * @param  array $productSections Array of product sections
+     * @return array
      */
-    public function addProductSections(array $productSections = []): array
-    {
-        // Id добавленных разделов товаров
+    public function addProductSections(array $productSections = []) : array {
+        // IDs of added product sections
         $productSectionResults = [];
 
         while ($productSectionsChunk = array_splice($productSections, 0, $this->batchSize)) {
             $commandParams = [];
+
             foreach ($productSectionsChunk as $index => $productSection) {
                 $commandParams[] = [ 'fields' => $productSection ];
             }
-            $commands = $this->buildCommands('crm.productsection.add', $commandParams);
-            $result = $this->batchRequest($commands);
 
-            $sent = count($commandParams);
+            $commands = $this->buildCommands('crm.productsection.add', $commandParams);
+            $result   = $this->batchRequest($commands);
+
+            $sent     = count($commandParams);
             $received = count($result);
 
             if ($received != $sent) {
                 $jsonResponse = $this->toJSON($this->lastResponse);
+
                 throw new Bitrix24APIException(
-                    "Невозможно пакетно добавить разделы товаров ({$sent}/{$received}): {$jsonResponse}"
+                    "Unable to add product sections ({$sent} / {$received}): {$jsonResponse}"
                 );
             }
 
@@ -186,45 +217,55 @@ trait ProductSection
     }
 
     /**
-     * Пакетно обновляет разделы товаров
-     *
-     * @param  array $productSections Массив разделов товаров
-     * @return array Массив Id разделов товаров
+     * Update product sections.
+     * Return array of IDs of product sections
+     * 
+     * Action: 'crm.productsection.update'
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_update.php
+     * 
+     * @param  array $productSections Array of product sections
+     * 
+     * @access public
+     * @return array
      */
-    public function updateProductSections(array $productSections = []): array
-    {
-        // Id обновленных разделов товаров
+    public function updateProductSections(array $productSections = []) : array {
+        // IDs of updated product sections
         $productSectionResults = [];
 
         while ($productSectionsChunk = array_splice($productSections, 0, $this->batchSize)) {
             $commandParams = [];
+
             foreach ($productSectionsChunk as $index => $productSection) {
-                // Проверка наличия поля ID в товаре на добавление
-                $productSectionId = $productSection['ID'] ?? null;
-                if (empty($productSectionId)) {
+                // Check if the ID field is available in the product for adding
+                $productSectionID = $productSection['ID'] ?? null;
+
+                if (empty($productSectionID)) {
                     $jsonProductSection = $this->toJSON($productSection);
+
                     throw new Bitrix24APIException(
-                        "Поле 'ID' в разделе товаров (index {$index}) на обновление " .
-                        "отсутствует или пустое: '{$jsonProductSection}'"
+                        "The 'ID' field in the product section (index {$index}) on the update is missing or empty: '{$jsonProductSection}'"
                     );
                 }
-                $productSectionResults[] = $productSectionId;
 
-                $commandParams[] = [
-                    'id'     => $productSectionId,
+                $productSectionResults[] = $productSectionID;
+
+                $commandParams[]         = [
+                    'id'     => $productSectionID,
                     'fields' => $productSection
                 ];
             }
-            $commands = $this->buildCommands('crm.productsection.update', $commandParams);
-            $result = $this->batchRequest($commands);
 
-            $sent = count($commandParams);
+            $commands = $this->buildCommands('crm.productsection.update', $commandParams);
+            $result   = $this->batchRequest($commands);
+
+            $sent     = count($commandParams);
             $received = count($result);
 
             if ($received != $sent) {
                 $jsonResponse = $this->toJSON($this->lastResponse);
+
                 throw new Bitrix24APIException(
-                    "Невозможно пакетно обновить раздел товаров ({$sent}/{$received}): {$jsonResponse}"
+                    "Unable to update product section ({$sent} / {$received}): {$jsonResponse}"
                 );
             }
         }
@@ -233,32 +274,39 @@ trait ProductSection
     }
 
     /**
-     * Пакетно удаляет разделы товаров
-     *
-     * @param  array $productSectionIds Массив Id разделов товаров
+     * Delete product sections
+     * 
+     * Action: 'crm.productsection.delete'
+     * @see    https://training.bitrix24.com/rest_help/crm/product_section/crm_productsection_delete.php
+     * 
+     * @param  array $productSectionIDs Array of product section IDs
+     * 
+     * @access public
      * @return array Массив Id разделов товаров
      */
-    public function deleteProductSections(array $productSectionIds = []): array
-    {
-        // Id удаленных разделов товаров
+    public function deleteProductSections(array $productSectionIDs = []) : array {
+        // ID of deleted product sections
         $productSectionResults = [];
 
-        while ($productSectionsChunk = array_splice($productSectionIds, 0, $this->batchSize)) {
+        while ($productSectionsChunk = array_splice($productSectionIDs, 0, $this->batchSize)) {
             $commandParams = [];
-            foreach ($productSectionsChunk as $index => $productSectionId) {
-                $commandParams[] = [ 'id' => $productSectionId ];
-                $productSectionResults[] = $productSectionId;
-            }
-            $commands = $this->buildCommands('crm.productsection.delete', $commandParams);
-            $result = $this->batchRequest($commands);
 
-            $sent = count($commandParams);
+            foreach ($productSectionsChunk as $index => $productSectionID) {
+                $commandParams[]         = ['id' => $productSectionID];
+                $productSectionResults[] = $productSectionID;
+            }
+
+            $commands = $this->buildCommands('crm.productsection.delete', $commandParams);
+            $result   = $this->batchRequest($commands);
+
+            $sent     = count($commandParams);
             $received = count($result);
 
             if ($received != $sent) {
                 $jsonResponse = $this->toJSON($this->lastResponse);
+
                 throw new Bitrix24APIException(
-                    "Невозможно пакетно удалить разделы товаров ({$sent}/{$received}): {$jsonResponse}"
+                    "Unable to delete product sections ({$sent} / {$received}): {$jsonResponse}"
                 );
             }
         }

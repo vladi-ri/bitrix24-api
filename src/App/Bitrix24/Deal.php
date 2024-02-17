@@ -8,16 +8,16 @@ use Generator;
 
 /**
  * Trait Deal
- * Methods for working with a deal in the Bitrix24 system.
+ * Methods for working with a deal in Bitrix24.
  *
  * @author    vladi-ri
  * @copyright 2024 vladi-ri
- * @see       https://github.com/vladi-ri/bitrix24-api-php
+ * @see       https://github.com/vladi-ri/bitrix24-api
  * @license   OpenSource
  *
  * @version 1.0.0
  * 
- * v1.0.0 (16.02.2024) Introduce Bitrix24API PHP project
+ * v1.0.0 (17.02.2024) Introduce Bitrix24API PHP project
  */
 trait Deal
 {

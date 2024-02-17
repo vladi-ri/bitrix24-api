@@ -1,34 +1,37 @@
 <?php
 
-/**
- * Трейт ProductRow. Методы для работы с товарными позициями в системе Bitrix24.
- *
- * @author    andrey-tech
- * @copyright 2021 andrey-tech
- * @see       https://github.com/andrey-tech/bitrix24-api-php
- * @license   MIT
- *
- * @version 1.0.0
- *
- * v1.0.0 (20.02.2021) Начальная версия
- *
- */
-
 declare(strict_types=1);
 
-namespace App\Bitrix24;
+namespace app\Bitrix24;
 
 use Generator;
 
+/**
+ * Trait ProductRow
+ * Methods for working with product rows in Bitrix24.
+ * 
+ * @author    vladi-ri
+ * @copyright 2024 vladi-ri
+ * @see       https://github.com/vladi-ri/bitrix24-api
+ * @license   OpenSource
+ *
+ * @version 1.0.0
+ * 
+ * v1.0.0 (17.02.2024) Introduce Bitrix24API PHP project
+ */
 trait ProductRow
 {
     /**
-     * Возвращает описание полей товарных позиций
-     *
+     * Return the description of product item fields.
+     * 
+     * Action: 'crm.productrow.fields'
+     * @see    https://training.bitrix24.com/rest_help/crm/productrow_old/crm_productrow_fields.php
+     * @deprecated
+     * 
+     * @access public
      * @return array
      */
-    public function getProductRowFields()
-    {
+    public function getProductRowFields() : array {
         return $this->request('crm.productrow.fields');
     }
 }

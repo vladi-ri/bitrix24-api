@@ -18,7 +18,7 @@ use Generator;
  *
  * @version 1.0.0
  *
- * v1.0.0 (16.02.2024) Introduce Bitrix24API PHP project
+ * v1.0.0 (17.02.2024) Introduce Bitrix24API PHP project
  */
 class Bitrix24API
 {

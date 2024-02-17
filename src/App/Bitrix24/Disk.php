@@ -1,37 +1,38 @@
 <?php
 
-/**
- * Трейт Disk. Методы для работы с диском в системе Bitrix24.
- *
- * @author    andrey-tech
- * @copyright 2019-2021 andrey-tech
- * @see       https://github.com/andrey-tech/bitrix24-api-php
- * @license   MIT
- *
- * @version 1.0.1
- *
- * v1.0.0 (28.10.2019) Начальная версия
- * v1.0.1 (03.02.2021) Рефакторинг
- */
-
 declare(strict_types=1);
 
-namespace App\Bitrix24;
+namespace app\Bitrix24;
 
 use Generator;
 
+/**
+ * Trait Disk
+ * Methods for working with disc in Bitrix24.
+ * 
+ * @author    vladi-ri
+ * @copyright 2024 vladi-ri
+ * @see       https://github.com/vladi-ri/bitrix24-api
+ * @license   OpenSource
+ *
+ * @version 1.0.0
+ * 
+ * v1.0.0 (17.02.2024) Introduce Bitrix24API PHP project
+ */
 trait Disk
 {
-
     /**
-     * Возвращает список доступных хранилищ
-     *
-     * @param  array $filter Параметры
-     *                       фильтрации
+     * Return a list of available storages
+     * 
+     * Action: 'disk.storage.getlist'
+     * @see    https://training.bitrix24.com/rest_help/disk/storage/disk_storage_getlist.php
+     * 
+     * @param  array $filter Filtering parameters
+     * 
+     * @access public
      * @return Generator
      */
-    public function getDiskStorageList(array $filter = []): Generator
-    {
+    public function getDiskStorageList(array $filter = []) : Generator {
         $params = [
             'filter'  => $filter
         ];
@@ -40,19 +41,20 @@ trait Disk
     }
 
     /**
-     * Возвращает список файлов и папок, которые находятся непосредственно в корне хранилища
-     *
-     * @param  int|string $storageId Id хранилища
+     * Return a list of files and folders that are directly in the root of the repository.
+     * 
+     * Action: 'disk.storage.getchildren'
+     * @see    https://training.bitrix24.com/rest_help/disk/storage/disk_storage_getchildren.php
+     * 
+     * @param  int|string $storageID Id хранилища
      * @param  array      $filter    Параметры
      *                               фильтрации
      * @return array
      */
-    public function getDiskStorageChildren($storageId, array $filter = [])
-    {
+    public function getDiskStorageChildren(int|string $storageID, array $filter = []) : array {
         $result = $this->request(
-            'disk.storage.getchildren',
-            [
-                'id'     => $storageId,
+            'disk.storage.getchildren', [
+                'id'     => $storageID,
                 'filter' => $filter
             ]
         );
@@ -61,38 +63,34 @@ trait Disk
     }
 
     /**
-     * Загружает новый файл в указанную папку на Диск
-     *
-     * @param  int|string $folderId         Id
-     *                                      папки
-     * @param  string     $fileContent      Raw
-     *                                      данные
-     *                                      файла
-     * @param  array      $data             Массив параметров,
-     *                                      описывающих файл
-     *                                      (обязательное поле
-     *                                      NAME - имя нового
-     *                                      файла)
-     * @param  bool       $isBase64FileData Raw данные файла
-     *                                      закодированы base64?
-     * @return array
+     * Upload the new file to the specified folder on Disk.
+     * 
+     * Action: 'disk.folder.uploadfile'
+     * @see    https://training.bitrix24.com/rest_help/disk/folder/disk_folder_uploadfile.php
      * @see    https://dev.1c-bitrix.ru/rest_help/disk/folder/disk_folder_uploadfile.php
+     * 
+     * @param  int|string $folderID         Folder ID
+     * @param  string     $fileContent      Raw file data
+     * @param  array      $data             Array of parameters describing the file (mandatory field NAME - name of the new file)
+     * @param  bool       $isBase64FileData Is raw file data base64 encoded?
+     * 
+     * @access public
+     * @return array
      */
     public function uploadfileDiskFolder(
-        $folderId,
+        int|string $folderID,
         string $fileContent,
         array $data,
         bool $isBase64FileData = true
-    ) {
+    ) : array {
 
         if (! $isBase64FileData) {
             $fileContent = base64_encode($fileContent);
         }
 
         $result = $this->request(
-            'disk.folder.uploadfile',
-            [
-                'id'          => $folderId,
+            'disk.folder.uploadfile', [
+                'id'          => $folderID,
                 'fileContent' => $fileContent,
                 'data'        => $data
             ]

@@ -1,53 +1,56 @@
 <?php
 
-/**
- * Трейт Task. Методы для работы с задачами в системе Bitrix24.
- *
- * @author    andrey-tech
- * @copyright 2019-2022 andrey-tech
- * @see       https://github.com/andrey-tech/bitrix24-api-php
- * @license   MIT
- *
- * @version 1.1.0
- *
- * v1.0.0 (02.12.2019) Начальная версия
- * v1.0.1 (03.02.2021) Исправлено имя класса исключения в методах
- * v1.1.0 (22.05.2022) Добавлен метод getTaskList()
- */
-
 declare(strict_types=1);
 
-namespace App\Bitrix24;
+namespace app\Bitrix24;
 
 use Generator;
 
+/**
+ * Trait Task
+ * Methods for working with tasks in Bitrix24.
+ *
+ * @author    vladi-ri
+ * @copyright 2024 vladi-ri
+ * @see       https://github.com/vladi-ri/bitrix24-api
+ * @license   OpenSource
+ *
+ * @version 1.0.0
+ *
+ * v1.0.0 (17.02.2024) Introduce Bitrix24API PHP project
+ */
 trait Task
 {
     /**
-     * Возвращает список названий полей задачи
-     *
+     * Return a list of task field names
+     * 
+     * Action: 'tasks.task.getFields'
+     * @see    https://training.bitrix24.com/rest_help/tasks/task/tasks/tasks_task_getFields.php
+     * 
+     * @access public
      * @return array
      */
-    public function getTaskFields()
-    {
+    public function getTaskFields() : array {
         return $this->request('tasks.task.getFields');
     }
 
     /**
-     * Возвращает задачу по ID
-     *
-     * @param  int|string $taskId ID задачи
-     * @param  array      $select Параметры
-     *                            выборки
+     * Return task by ID.
+     * 
+     * Action: 'tasks.task.get'
+     * @see    https://training.bitrix24.com/rest_help/tasks/task/tasks/tasks_task_get.php
+     * 
+     * @param  int|string $taskID Task ID
+     * @param  array      $select Selection parameters
+     * 
+     * @access public
      * @return array|null
      */
-    public function getTask($taskId, array $select = [])
-    {
+    public function getTask(int|string $taskID, array $select = []) : array|null {
         $task = $this->request(
-            'tasks.task.get',
-            [
-            'taskId' => $taskId,
-            'select' => $select
+            'tasks.task.get', [
+                'taskId' => $taskID,
+                'select' => $select
             ]
         );
 
@@ -55,17 +58,24 @@ trait Task
     }
 
     /**
-     * Возвращает все задачи
-     *
-     * @param  array $filter Параметры фильтрации
-     * @param  array $order  Параметры
-     *                       сортировки
-     * @param  array $select Параметры выборки
-     * @return Generator
+     * Return all tasks.
+     * 
+     * Action: 'tasks.task.list'
+     * @see    https://training.bitrix24.com/rest_help/tasks/task/tasks/tasks_task_list.php
      * @see    https://dev.1c-bitrix.ru/rest_help/tasks/task/tasks/tasks_task_list.php
+     * 
+     * @param  array $filter Filtering parameters
+     * @param  array $select Selection parameters
+     * @param  array $order  Sorting parameters
+     * 
+     * @access public
+     * @return Generator
      */
-    public function getTaskList(array $filter = [], array $select = [], array $order = []): Generator
-    {
+    public function getTaskList(
+        array $filter = [],
+        array $select = [],
+        array $order = []
+    ) : Generator {
         $params = [
             'order'  => $order,
             'filter' => $filter,
@@ -76,16 +86,19 @@ trait Task
     }
 
     /**
-     * Добавляет задачу
-     *
-     * @param  array $fields Список полей задачи
+     * Add task.
+     * 
+     * Action: 'tasks.task.add'
+     * @see    https://training.bitrix24.com/rest_help/tasks/task/tasks/tasks_task_add.php
+     * 
+     * @param  array $fields List of task fields
+     * 
+     * @access public
      * @return int
      */
-    public function addTask(array $fields = [])
-    {
+    public function addTask(array $fields = []) : int {
         $result = $this->request(
-            'tasks.task.add',
-            [
+            'tasks.task.add', [
                 'fields' => $fields
             ]
         );
@@ -93,37 +106,43 @@ trait Task
         return $result;
     }
 
-    // ------------------------------------------------------------------------
-
     /**
-     * Пакетно добавляет задачи
-     *
-     * @param  array $companies Массив параметров задач
+     * Add tasks.
+     * 
+     * Action: 'tasks.task.add'
+     * @see    https://training.bitrix24.com/rest_help/tasks/task/tasks/tasks_task_add.php
+     * 
+     * @param  array $companies Array of task parameters
+     * 
+     * @access public
      * @return array Массив id активностей
      */
-    public function addTasks(array $tasks = []): array
-    {
-        // Id добавленных задач
+    public function addTasks(array $tasks = []) : array {
+        // IDs of added tasks
         $taskResults = [];
 
         while ($tasksChunk = array_splice($tasks, 0, $this->batchSize)) {
-            // Формируем массив команд на добавление задач
+            // Create an array of commands to add tasks
             $commandParams = [];
+
             foreach ($tasksChunk as $index => $task) {
-                $commandParams[ $index ] = [
+                $commandParams[$index] = [
                     'fields' => $task
                 ];
             }
-            $commands = $this->buildCommands('tasks.task.add', $commandParams);
+
+            $commands   = $this->buildCommands('tasks.task.add', $commandParams);
             $taskResult = $this->batchRequest($commands);
 
-            // Сравниваем число команд и число id в ответе
-            $sent = count($commandParams);
+            // Comparing number of commands and number of IDs in the response
+            $sent     = count($commandParams);
             $received = count($taskResult);
+
             if ($received != $sent) {
                 $jsonResponse = $this->toJSON($this->lastResponse);
+
                 throw new Bitrix24APIException(
-                    "Невозможно пакетно добавить задачи ({$sent}/{$received}): {$jsonResponse}"
+                    "Unable to add tasks ({$sent} / {$received}): {$jsonResponse}"
                 );
             }
 

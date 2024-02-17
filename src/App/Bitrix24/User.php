@@ -1,67 +1,72 @@
 <?php
 
-/**
- * Трейт User. Методы для работы с пользователем в системе Bitrix24.
- *
- * @author    andrey-tech
- * @copyright 2019-2021 andrey-tech
- * @see       https://github.com/andrey-tech/bitrix24-api-php
- * @license   MIT
- *
- * @version 1.2.1
- *
- * v1.0.0 (25.10.2019) Начальная версия
- * v1.0.1 (11.11.2019) Добавлены параметры к методам getUsers()
- * v1.1.0 (15.11.2019) Добавлен метод getUserFields()
- * v1.2.0 (11.06.2020) Исправлен метод getUsers()
- * v1.2.1 (03.02.2021) Рефакторинг
- */
-
 declare(strict_types=1);
 
 namespace App\Bitrix24;
 
 use Generator;
 
+/**
+ * Trait User.
+ * Methods for working with User in Bitrix24.
+ * 
+ * @author    vladi-ri
+ * @copyright 2024 vladi-ri
+ * @see       https://github.com/vladi-ri/bitrix24-api
+ * @license   OpenSource
+ *
+ * @version 1.0.0
+ * 
+ * v1.0.0 (17.02.2024) Introduce Bitrix24API PHP project
+ */
 trait User
 {
     /**
-     * Возвращает список названий полей пользователя
-     *
+     * Return a list of the user's field names
+     * 
+     * Action: 'user.fields'
+     * @see    https://training.bitrix24.com/rest_help/users/user_fields.php
+     * 
+     * @access public
      * @return array
      */
-    public function getUserFields()
-    {
+    public function getUserFields() : array {
         return $this->request('user.fields');
     }
 
     /**
-     * Возвращает пользователя по ID
-     *
-     * @param  int|string $userId ID пользователя
+     * Return user by ID.
+     * 
+     * Action: 'user.get'
+     * @see    https://training.bitrix24.com/rest_help/users/user_get.php
+     * 
+     * @param  int|string $userID User ID
+     * 
+     * @access public
      * @return array|null
      */
-    public function getUser($userId)
-    {
-        $result = $this->request('user.get', [ 'ID' => $userId ]);
+    public function getUser(int|string $userID) : array|null {
+        $result = $this->request('user.get', [
+            'ID' => $userID
+        ]);
+
         $user = array_shift($result);
 
         return $user;
     }
 
     /**
-     * Возвращает всех пользователей
-     *
-     * @param  array  $filter    Параметры
-     *                           фильтрации
-     * @param  string $order     Направление
-     *                           сортировки
-     * @param  string $sort      Поле, по которому
-     *                           сортируются
-     *                           результаты
-     * @param  bool   $adminMode Ключ работы в
-     *                           режиме
-     *                           администратора
+     * Return all users.
+     * 
+     * Action: 'user.get'
+     * @see    https://training.bitrix24.com/rest_help/users/user_get.php
+     * 
+     * @param  array  $filter    Filtering parameters
+     * @param  string $order     Sorting direction
+     * @param  string $sort      The field by which the results are sorted
+     * @param  bool   $adminMode Admin mode key
+     * 
+     * @access public
      * @return Generator
      */
     public function getUsers(
@@ -69,7 +74,7 @@ trait User
         string $order = 'ASC',
         string $sort = '',
         bool $adminMode = false
-    ): Generator {
+    ) : Generator {
 
         $params = [
             'FILTER'     => $filter,

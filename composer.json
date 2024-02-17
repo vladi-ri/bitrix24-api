@@ -1,14 +1,14 @@
 {
-    "name": "andrey-tech/bitrix24-api-php",
-    "description": "Обертка на PHP7+ для работы с API Битрикс24 с использованием механизма входящих вебхуков, троттлингом запросов и логированием в файл",
+    "name": "vladi-ri/bitrix24-api",
+    "description": "PHP7+ wrapper for working with Bitrix24 API using the mechanism of incoming webhooks, request trattling and logging to a file.",
     "keywords": [ "bitrix", "bitrix24", "api", "api-wrapper", "throttling", "logging", "webhook" ],
-    "homepage": "https://github.com/andrey-tech/bitrix24-api-php",
+    "homepage": "https://github.com/vladi-ri/bitrix24-api/",
     "minimum-stability": "stable",
-    "license": "MIT",
+    "license": "OpenSource",
     "authors": [
         {
-            "name": "andrey-tech",
-            "homepage": "https://github.com/andrey-tech/",
+            "name": "vladi-ri",
+            "homepage": "https://github.com/vladi-ri/",
             "role": "Developer"
         }
     ],
@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\Bitrix24\\": "src/App/Bitrix24"
+            "app\\Bitrix24\\": "src/app/Bitrix24"
         }
     }
 }

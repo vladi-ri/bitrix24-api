@@ -1,67 +1,74 @@
 <?php
 
-/**
- * Трейт Product. Методы для работы с товаром в системе Bitrix24.
- *
- * @author    andrey-tech
- * @copyright 2019-2021 andrey-tech
- * @see       https://github.com/andrey-tech/bitrix24-api-php
- * @license   MIT
- *
- * @version 1.2.1
- *
- * v1.0.0 (14.10.2019) Начальная версия
- * v1.0.1 (30.10.2019) Добавлено значение по умолчанию в getProductList() для $select = [ '*', 'PROPERTY_*' ]
- * v1.1.0 (15.11.2019) Добавлен метод getProductFields()
- * v1.2.0 (09.06.2020) Добавлен метод fetchProductList()
- * v1.2.1 (03.02.2021) Исправлено имя класса исключения в методах
- */
-
 declare(strict_types=1);
 
-namespace App\Bitrix24;
+namespace app\Bitrix24;
 
 use Generator;
 
+/**
+ * Trait Product
+ * Methods for working with products in Bitrix24.
+ * 
+ * @author    vladi-ri
+ * @copyright 2024 vladi-ri
+ * @see       https://github.com/vladi-ri/bitrix24-api
+ * @license   OpenSource
+ *
+ * @version 1.0.0
+ * 
+ * v1.0.0 (17.02.2024) Introduce Bitrix24API PHP project
+ */
 trait Product
 {
     /**
-     * Возвращает описание полей товара, в том числе пользовательских
-     *
+     * Return a description of product fields, including custom fields.
+     * 
+     * Action: 'crm.product.fields'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_fields.php
+     * 
+     * @access public
      * @return array
      */
-    public function getProductFields()
-    {
+    public function getProductFields() : array {
         return $this->request('crm.product.fields');
     }
 
     /**
-     * Возвращает товар по ID
-     *
-     * @param  int|string $productId ID товара
+     * Get product by ID.
+     * 
+     * Action: 'crm.product.get'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_get.php
+     * 
+     * @param  int|string $productID Product ID
+     * 
+     * @access public
      * @return array
      */
-    public function getProduct($productId)
-    {
+    public function getProduct(int|string $productID) : array {
         $product = $this->request(
-            'crm.product.get',
-            [ 'id' => $productId ]
+            'crm.product.get', [
+                'id' => $productID
+            ]
         );
 
         return $product;
     }
 
     /**
-     * Добавляет товар
-     *
-     * @param  array $fields Список полей товара
+     * Add a product.
+     * 
+     * Action: 'crm.product.add'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_add.php
+     * 
+     * @param  array $fields List of product fields
+     * 
+     * @access public
      * @return int
      */
-    public function addProduct(array $fields = [])
-    {
+    public function addProduct(array $fields = []) : int {
         $result = $this->request(
-            'crm.product.add',
-            [
+            'crm.product.add', [
                 'fields' => $fields
             ]
         );
@@ -70,20 +77,21 @@ trait Product
     }
 
     /**
-     * Обновляет товар
-     *
-     * @param  int|string $productId ID товара
-     * @param  array      $fields    Список
-     *                               полей
-     *                               товара
+     * Update a product.
+     * 
+     * Action: 'crm.product.update'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_update.php
+     * 
+     * @param  int|string $productID Product ID
+     * @param  array      $fields    Список полей товара
+     * 
+     * @access public
      * @return int
      */
-    public function updateProduct($productId, array $fields = [])
-    {
+    public function updateProduct($productID, array $fields = []) : int {
         $result = $this->request(
-            'crm.product.update',
-            [
-                'id'     => $productId,
+            'crm.product.update', [
+                'id'     => $productID,
                 'fields' => $fields
             ]
         );
@@ -92,28 +100,37 @@ trait Product
     }
 
     /**
-     * Удаляет товар по ID
-     *
-     * @param  string|int $productId ID товара
+     * Delete product by ID.
+     * 
+     * Action: 'crm.product.delete'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_delete.php
+     * 
+     * @param  string|int $productID Product ID
+     * 
+     * @access public
      * @return array
      */
-    public function deleteProduct($productId)
-    {
+    public function deleteProduct(string|int $productID) : array {
         $result = $this->request(
-            'crm.product.delete',
-            [ 'id' => $productId ]
+            'crm.product.delete', [
+                'id' => $productID
+            ]
         );
 
         return $result;
     }
 
     /**
-     * Возвращает все товары
-     *
-     * @param  array $filter Параметры фильтрации
-     * @param  array $order  Параметры
-     *                       сортировки
-     * @param  array $select Параметры выборки
+     * Return all products.
+     * 
+     * Action: 'crm.product.list'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_list.php
+     * 
+     * @param  array $filter Filtering parameters
+     * @param  array $order  Ordering parameters
+     * @param  array $select Selection parameters
+     * 
+     * @access public
      * @return Generator
      */
     public function getProductList(
@@ -131,20 +148,24 @@ trait Product
     }
 
     /**
-     * Возвращает все товары используя быстрый метод
-     *
+     * Return all products using the quick method.
+     * 
+     * Action: 'crm.product.list'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_list.php
      * @see    https://dev.1c-bitrix.ru/rest_help/rest_sum/start.php
-     * @param  array $filter Параметры фильтрации
-     * @param  array $order  Параметры
-     *                       сортировки
-     * @param  array $select Параметры выборки
+     * 
+     * @param  array $filter Filtering parameters
+     * @param  array $order  Ordering parameters
+     * @param  array $select Selection parameters
+     * 
+     * @access public
      * @return Generator
      */
     public function fetchProductList(
         array $filter = [],
-        array $select = [ '*', 'PROPERTY_*' ],
+        array $select = ['*', 'PROPERTY_*'],
         array $order = []
-    ): Generator {
+    ) : Generator {
         $params = [
             'order'  => $order,
             'filter' => $filter,
@@ -154,36 +175,40 @@ trait Product
         return $this->fetchList('crm.product.list', $params);
     }
 
-
-    // ------------------------------------------------------------------------
-
     /**
-     * Пакетно добавляет товары
-     *
-     * @param  array $products Массив товаров
-     *                         Секция товаров 'SECTION_ID'
-     * @return array Массив Id товаров
+     * Add products.
+     * Return array of product IDs.
+     * 
+     * Action: 'crm.product.add'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_add.php
+     * 
+     * @param  array $products Products array - Product section 'SECTION_ID'
+     * 
+     * @access public
+     * @return array
      */
-    public function addProducts(array $products = []): array
-    {
-        // Id добавленных товаров
+    public function addProducts(array $products = []) : array {
+        // IDs of added products
         $productResults = [];
 
         while ($productsChunk = array_splice($products, 0, $this->batchSize)) {
             $commandParams = [];
+
             foreach ($productsChunk as $index => $product) {
                 $commandParams[] = [ 'fields' => $product ];
             }
-            $commands = $this->buildCommands('crm.product.add', $commandParams);
-            $result = $this->batchRequest($commands);
 
-            $sent = count($commandParams);
+            $commands = $this->buildCommands('crm.product.add', $commandParams);
+            $result   = $this->batchRequest($commands);
+
+            $sent     = count($commandParams);
             $received = count($result);
 
             if ($received != $sent) {
                 $jsonResponse = $this->toJSON($this->lastResponse);
+
                 throw new Bitrix24APIException(
-                    "Невозможно пакетно добавить товары ({$sent}/{$received}): {$jsonResponse}"
+                    "Unable to add products ({$sent} / {$received}): {$jsonResponse}"
                 );
             }
 
@@ -194,44 +219,55 @@ trait Product
     }
 
     /**
-     * Пакетно обновляет товары
-     *
-     * @param  array $products Массив товаров
-     * @return array Массив Id товаров
+     * Update products.
+     * Return array of product IDs.
+     * 
+     * Action: 'crm.product.update'
+     * @see    https://training.bitrix24.com/rest_help/crm/products/crm_product_update.php
+     * 
+     * @param  array $products Products array
+     * 
+     * @access public
+     * @return array
      */
-    public function updateProducts(array $products = []): array
-    {
-        // Id обновленных товаров
+    public function updateProducts(array $products = []) : array {
+        // IDs of updated products
         $productResults = [];
 
         while ($productsChunk = array_splice($products, 0, $this->batchSize)) {
             $commandParams = [];
+
             foreach ($productsChunk as $index => $product) {
-                // Проверка наличия поля ID в товаре на добавление
-                $productId = $product['ID'] ?? null;
-                if (empty($productId)) {
+                // Check if the ID field is available in the product for adding
+                $productID = $product['ID'] ?? null;
+
+                if (empty($productID)) {
                     $jsonProduct = $this->toJSON($product);
+
                     throw new Bitrix24APIException(
-                        "Поле 'ID' в товаре (index {$index}) на обновление отсутствует или пустое: '{$jsonProduct}'"
+                        "The 'ID' field in the product (index {$index}) on the update is missing or empty: '{$jsonProduct}'"
                     );
                 }
-                $productResults[] = $productId;
+
+                $productResults[] = $productID;
 
                 $commandParams[] = [
-                    'id'     => $productId,
+                    'id'     => $productID,
                     'fields' => $product
                 ];
             }
-            $commands = $this->buildCommands('crm.product.update', $commandParams);
-            $result = $this->batchRequest($commands);
 
-            $sent = count($commandParams);
+            $commands = $this->buildCommands('crm.product.update', $commandParams);
+            $result   = $this->batchRequest($commands);
+
+            $sent     = count($commandParams);
             $received = count($result);
 
             if ($received != $sent) {
                 $jsonResponse = $this->toJSON($this->lastResponse);
+
                 throw new Bitrix24APIException(
-                    "Невозможно пакетно обновить товары ({$sent}/{$received}): {$jsonResponse}"
+                    "Unable to update products ({$sent} / {$received}): {$jsonResponse}"
                 );
             }
         }
@@ -240,32 +276,37 @@ trait Product
     }
 
     /**
-     * Пакетно удаляет товары
-     *
-     * @param  array $productIds Массив Id товаров
-     * @return array Массив Id товаров
+     * Delete products.
+     * Return array of product IDs
+     * 
+     * @param  array $productIDs Array of product IDs
+     * 
+     * @access public
+     * @return array
      */
-    public function deleteProducts(array $productIds = []): array
-    {
-        // Id удаленных товаров
+    public function deleteProducts(array $productIDs = []) : array {
+        // IDs of deleted items
         $productResults = [];
 
-        while ($productsChunk = array_splice($productIds, 0, $this->batchSize)) {
+        while ($productsChunk = array_splice($productIDs, 0, $this->batchSize)) {
             $commandParams = [];
-            foreach ($productsChunk as $index => $productId) {
-                $commandParams[] = [ 'id' => $productId ];
-                $productResults[] = $productId;
-            }
-            $commands = $this->buildCommands('crm.product.delete', $commandParams);
-            $result = $this->batchRequest($commands);
 
-            $sent = count($commandParams);
+            foreach ($productsChunk as $index => $productID) {
+                $commandParams[]  = ['id' => $productID];
+                $productResults[] = $productID;
+            }
+
+            $commands = $this->buildCommands('crm.product.delete', $commandParams);
+            $result   = $this->batchRequest($commands);
+
+            $sent     = count($commandParams);
             $received = count($result);
 
             if ($received != $sent) {
                 $jsonResponse = $this->toJSON($this->lastResponse);
+
                 throw new Bitrix24APIException(
-                    "Невозможно пакетно удалить товары ({$sent}/{$received}): {$jsonResponse}"
+                    "Unable to delete products ({$sent} / {$received}): {$jsonResponse}"
                 );
             }
         }
